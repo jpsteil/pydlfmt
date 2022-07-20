@@ -4,6 +4,9 @@ tests/output/*
 # vs code settings directory
 .vscode
 
+# pycharm project configuration
+.idea
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
