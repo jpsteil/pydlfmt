@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name="pydlfmt",
@@ -12,4 +12,5 @@ setup(
     keywords=["tag1", "tag2"],
     classifiers=[],
     install_requires=["reportlab", "xlsxwriter"],
+    zip_safe=False,
 )
