@@ -1,0 +1,3 @@
+pytest
+reportlab
+xlsxwriter
