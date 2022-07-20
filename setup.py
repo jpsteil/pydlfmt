@@ -11,6 +11,6 @@ setup(
     download_url="https://github.com/jpsteil/pydlfmt/archive/refs/tags/v0.0.1.tar.gz",
     keywords=["tag1", "tag2"],
     classifiers=[],
-    install_requires=["reportlab", "xlsxwriter"],
+    install_requires=["pytest", "reportlab", "xlsxwriter"],
     zip_safe=False,
 )
