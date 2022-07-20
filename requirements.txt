@@ -1,4 +1,4 @@
-dateutil
 pytest
+python-dateutil
 reportlab
 xlsxwriter
