@@ -71,33 +71,6 @@ class ReportBuilder(DataFormatter):
         ]
 
 
-def test_samples():
-    data = load_data()
-
-    rb = ReportBuilder(data=data)
-    rb.to_pdf(filename=os.path.join("../examples", "output", "sample.pdf"))
-    rb.to_excel(
-        filename=os.path.join("../examples", "output", "sample.xlsx"),
-        format_table=True,
-    )
-
-    df = DataFormatter(data=data)
-    df.columns = [
-        Column("id"),
-        Column("name"),
-        Column("sex"),
-        Column("age"),
-        Column("year"),
-        Column("team"),
-        Column("sport"),
-    ]
-    df.to_pdf(filename=os.path.join("../tests", "../examples", "output", "sample2.pdf"))
-    df.to_excel(
-        filename=os.path.join("../tests", "../examples", "output", "sample2.xlsx"),
-        format_table=True,
-    )
-
-
 if __name__ == "__main__":
     data = load_data()
 
