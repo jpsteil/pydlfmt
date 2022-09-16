@@ -74,6 +74,7 @@ class ReportBuilder(DataFormatter):
 if __name__ == "__main__":
     data = load_data()
 
+    #  example 1 - using a Class that inherited DataFormatter
     rb = ReportBuilder(data=data)
     rb.to_pdf(filename=os.path.join("../examples", "output", "sample.pdf"))
     rb.to_excel(
@@ -81,6 +82,7 @@ if __name__ == "__main__":
         format_table=True,
     )
 
+    #  example 2 - using the Dataformatter class directly
     df = DataFormatter(data=data)
     df.columns = [
         Column("id"),
