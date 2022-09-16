@@ -30,7 +30,7 @@ class Olympian:
 def load_data():
     data = []
 
-    with open(os.path.join("tests", "input", "data.csv"), "r") as csv_file:
+    with open(os.path.join("../examples", "input", "data.csv"), "r") as csv_file:
         rdr = csv.DictReader(
             csv_file,
         )
@@ -75,9 +75,9 @@ def test_samples():
     data = load_data()
 
     rb = ReportBuilder(data=data)
-    rb.to_pdf(filename=os.path.join("tests", "output", "sample.pdf"))
+    rb.to_pdf(filename=os.path.join("../examples", "output", "sample.pdf"))
     rb.to_excel(
-        filename=os.path.join("tests", "output", "sample.xlsx"),
+        filename=os.path.join("../examples", "output", "sample.xlsx"),
         format_table=True,
     )
 
@@ -91,36 +91,35 @@ def test_samples():
         Column("team"),
         Column("sport"),
     ]
-    df.to_pdf(filename=os.path.join("tests", "output", "sample2.pdf"))
+    df.to_pdf(filename=os.path.join("../tests", "../examples", "output", "sample2.pdf"))
     df.to_excel(
-        filename=os.path.join("tests", "output", "sample2.xlsx"),
+        filename=os.path.join("../tests", "../examples", "output", "sample2.xlsx"),
         format_table=True,
     )
 
 
-#
-# if __name__ == "__main__":
-#     data = load_data()
-#
-#     rb = ReportBuilder(data=data)
-#     rb.to_pdf(filename=os.path.join("output", "sample.pdf"))
-#     rb.to_excel(
-#         filename=os.path.join("output", "sample.xlsx"),
-#         format_table=True,
-#     )
-#
-#     df = DataFormatter(data=data)
-#     df.columns = [
-#         Column("id"),
-#         Column("name"),
-#         Column("sex"),
-#         Column("age"),
-#         Column("year"),
-#         Column("team"),
-#         Column("sport"),
-#     ]
-#     df.to_pdf(filename=os.path.join("output", "sample2.pdf"))
-#     df.to_excel(
-#         filename=os.path.join("output", "sample2.xlsx"),
-#         format_table=True,
-#     )
+if __name__ == "__main__":
+    data = load_data()
+
+    rb = ReportBuilder(data=data)
+    rb.to_pdf(filename=os.path.join("../examples", "output", "sample.pdf"))
+    rb.to_excel(
+        filename=os.path.join("../examples", "output", "sample.xlsx"),
+        format_table=True,
+    )
+
+    df = DataFormatter(data=data)
+    df.columns = [
+        Column("id"),
+        Column("name"),
+        Column("sex"),
+        Column("age"),
+        Column("year"),
+        Column("team"),
+        Column("sport"),
+    ]
+    df.to_pdf(filename=os.path.join("../examples", "output", "sample2.pdf"))
+    df.to_excel(
+        filename=os.path.join("../examples", "output", "sample2.xlsx"),
+        format_table=True,
+    )

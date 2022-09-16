@@ -49,7 +49,7 @@ class DataFormatter:
         """
         override this method to build your username from the passed user id
         """
-        return ""
+        return self.user_id
 
     def to_pdf(
         self,
