@@ -1,4 +1,6 @@
 from setuptools import setup
+import subprocess
+import os
 
 pydlfmt_version = subprocess.run(['git', 'describe', '--tags'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
 assert "." in pydlfmt_version
