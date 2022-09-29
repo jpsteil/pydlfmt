@@ -129,6 +129,7 @@ class ReportSection:
     footer: str = None
     footer_style: ParagraphStyle = None
     format_table: bool = False
+    include_column_headers: bool = True
 
 
 @dataclass
@@ -281,12 +282,13 @@ class XLSXReport:
                 else "Sheet1"
             )
 
-            #  write header row
-            ws.write_row(
-                row=0,
-                col=0,
-                data=headings,
-            )
+            if section.include_column_headers:
+                #  write header row
+                ws.write_row(
+                    row=0,
+                    col=0,
+                    data=headings,
+                )
 
             for i, row in enumerate(section.data):
                 height_rows = 1
@@ -710,7 +712,10 @@ class PDFReport:
                     ("FONTNAME", (col_number, 1), (col_number, -1), self.bold_font)
                 )
 
-        report_data = [[x.heading for x in section.columns]]
+        report_data = []
+        if section.include_column_headers:
+            report_data.append([x.heading for x in section.columns])
+
         scalars = dict(TOTAL=dict(), AVG=dict(), COUNT=dict())
         for row in section.data:
             rr = []
