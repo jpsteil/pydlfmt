@@ -130,6 +130,8 @@ class ReportSection:
     footer_style: ParagraphStyle = None
     format_table: bool = False
     include_column_headers: bool = True
+    space_before = 0.25 * inch
+    space_after = 0.25 * inch
 
 
 @dataclass
@@ -464,6 +466,7 @@ class PDFReport:
         filename="pdf_report.pdf",
         username=None,
         date_format="%m/%d/%Y",
+        include_column_headers=True,  # used only if sections is None
     ):
         self.headings = headings
         self.orientation = orientation
@@ -472,6 +475,7 @@ class PDFReport:
         self.filename = filename
         self.username = username
         self.sections = sections
+        self.include_column_headers = include_column_headers
 
         #  Report Setup
         reportlab.rl_config.warnOnMissingFontGlyphs = 0
@@ -668,7 +672,12 @@ class PDFReport:
 
         if self.data and len(self.data) > 0:
             self.build_section(
-                ReportSection(header="", columns=self.columns, data=self.data)
+                ReportSection(
+                    header="",
+                    columns=self.columns,
+                    data=self.data,
+                    include_column_headers=self.include_column_headers,
+                )
             )
         else:
             for section in self.sections:
@@ -686,7 +695,7 @@ class PDFReport:
         if section.header and section.header != "":
             self.report_story.append(Paragraph(section.header, style=self.styleH2))
         else:
-            self.report_story.append(Spacer(1, 0.25 * inch))
+            self.report_story.append(Spacer(1, section.space_before))
 
         for column in section.columns:
             if column.excel_formula and len(column.excel_formula) > 0:
@@ -868,7 +877,7 @@ class PDFReport:
                 )
             )
         else:
-            self.report_story.append(Spacer(1, 0.25 * inch))
+            self.report_story.append(Spacer(1, section.space_after))
 
         if section.pagebreak:
             self.report_story.append(PageBreak())
