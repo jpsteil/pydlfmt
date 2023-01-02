@@ -391,7 +391,7 @@ class XLSXReport:
                         columns.append({"header": column.heading})
 
                 ws.add_table(
-                    "A1:%s%s" % (last_column_letter, len(self.data) + 3),
+                    "A1:%s%s" % (last_column_letter, len(section.data) + 3),
                     {
                         "style": "Table Style Medium 15",
                         "total_row": 1,
