@@ -45,6 +45,9 @@ class DataFormatter:
 
         self.scalar_heading_column = 1
 
+        self.inch = inch
+        self.colors = colors
+
     def get_username(self):
         """
         override this method to build your username from the passed user id
