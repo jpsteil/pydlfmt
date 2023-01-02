@@ -45,9 +45,6 @@ class DataFormatter:
 
         self.scalar_heading_column = 1
 
-        self.inch = inch
-        self.colors = colors
-
     def get_username(self):
         """
         override this method to build your username from the passed user id
@@ -584,6 +581,9 @@ class PDFReport:
             self.pagesize = pagesizes.landscape(pagesizes.letter)
         else:
             self.pagesize = pagesizes.letter
+
+        self.inch = inch
+        self.colors = colors
 
         self.top_margin = 1.25 * inch + (0.5 * len(self.headings) - 1) * inch
         self.bottom_margin = 0.5 * inch
