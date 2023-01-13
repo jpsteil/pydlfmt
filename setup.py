@@ -20,7 +20,7 @@ setup(
     name="pydlfmt",
     # package_dir={"": ""},
     packages=["pydlfmt"],
-    version="v0.0.9",  # Ideally should be same as your GitHub release tag version
+    version="v0.0.10",  # Ideally should be same as your GitHub release tag version
     description="pydlfmt will take a list of objects, dicts, etc and output them to a PDF or XLSX",
     author="Jim Steil",
     author_email="jim@steilonline.com",
