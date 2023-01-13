@@ -356,7 +356,7 @@ class XLSXReport:
                                                         and from_cell[1] == i + 1
                                                     ):
                                                         f = self._get_column_format(
-                                                            self.columns[j]
+                                                            section.columns[j]
                                                         )
                                                         f[
                                                             "bg_color"
@@ -581,9 +581,6 @@ class PDFReport:
             self.pagesize = pagesizes.landscape(pagesizes.letter)
         else:
             self.pagesize = pagesizes.letter
-
-        self.inch = inch
-        self.colors = colors
 
         self.top_margin = 1.25 * inch + (0.5 * len(self.headings) - 1) * inch
         self.bottom_margin = 0.5 * inch
