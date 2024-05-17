@@ -726,147 +726,158 @@ class PDFReport:
             report_data.append([x.heading for x in section.columns])
 
         scalars = dict(TOTAL=dict(), AVG=dict(), COUNT=dict())
-        for row in section.data:
-            rr = []
-            for column in section.columns:
-                column_style = (
-                    column.paragraph_style if column.paragraph_style else self.styleN
-                )
-                if column.justify == "CENTER":
-                    column_style = self.style_center_n
-                elif column.justify == "RIGHT" or column.currency:
-                    column_style = self.style_right_n
 
-                if isinstance(row, dict):
-                    value = row[column.name]
-                else:
-                    value = row.__dict__[column.name]
-
-                if value:
-                    if column.datatype.lower() in ["int", "integer"]:
-                        scalar_rounding = "0"
-                        value = Decimal(value).quantize(
-                            Decimal(scalar_rounding), rounding=ROUND_HALF_UP
-                        )
-                        if column.include_commas:
-                            value = FORMAT_INT.format(value)
-                    elif column.datatype.lower() == "date":
-                        if not isinstance(value, datetime.date):
-                            value = parse(value).date()
-                        value = value.strftime("%m/%d/%Y")
-                    elif column.datatype.lower() == "datetime":
-                        if not isinstance(value, datetime.datetime):
-                            value = parse(value)
-                        value = value.strftime("%m/%d/%Y %I:%M%p")
-                    elif column.decimal_positions:
-                        scalar_rounding = "0.0000000000"[: column.decimal_positions + 2]
-                        value = Decimal(value).quantize(
-                            Decimal(scalar_rounding), rounding=ROUND_HALF_UP
-                        )
-                        if column.include_commas:
-                            fmt = "{0:,.%sf}" % column.decimal_positions
-                            value = fmt.format(value)
-                    column_style.fontSize = column.font_size
-                    display_value = value
-                    if column.currency:
-                        display_value = f"${value}"
-                    rr.append(Paragraph(str(display_value), style=column_style))
-                else:
-                    rr.append("")
-                string_value = str(value)
-                x = max(len(x) for x in string_value.split("<br />"))
-                # column.set_width(
-                #     len(str(max(len(x) for x in string_value.split("<br />"))))
-                # )
-                column.set_width(max(len(x) for x in string_value.split("<br />")))
-                for scalar in scalars:
-                    if column.scalar == scalar:
-                        if column.name not in scalars[scalar]:
-                            scalars[scalar][column.name] = 0
-                        if value:
-                            scalar_rounding = "0.00"
-                            if column.datatype.lower() in ["int", "integer"]:
-                                scalar_rounding = "0"
-                            if isinstance(value, str):
-                                value = value.replace(",", "")
-                            if column.decimal_positions:
-                                scalar_rounding = "0.0000000000"[
-                                    : column.decimal_positions + 2
-                                ]
-                            scalars[scalar][column.name] += Decimal(value).quantize(
-                                Decimal(scalar_rounding),
-                                rounding=ROUND_HALF_UP,
-                            )
-
-            report_data.append(rr)
-
-        data_rows = len(report_data)
-        for scalar in sorted(scalars):
-            scalar_label_written = False
-            if len(scalars[scalar]) > 0:
-                #  add summary row:
+        if len(section.data) > 0:
+            for row in section.data:
                 rr = []
-                for column_number, column in enumerate(section.columns):
-                    if column.name in scalars[scalar]:
-                        if scalar == "TOTAL":
-                            if column.include_commas:
-                                if column.datatype.lower() in ["int", "integer"]:
-                                    scalars[scalar][column.name] = FORMAT_INT.format(
-                                        scalars[scalar][column.name]
-                                    )
-                                elif column.decimal_positions:
-                                    fmt = "{0:,.%sf}" % column.decimal_positions
-                                    scalars[scalar][column.name] = fmt.format(
-                                        scalars[scalar][column.name]
-                                    )
-                            rr.append(scalars[scalar][column.name])
-                        elif scalar == "AVG":
-                            rr.append(
-                                Decimal(
-                                    scalars[scalar][column.name] / data_rows
-                                ).quantize(Decimal("0.00"))
-                            )
-                        elif scalar == "COUNT":
-                            rr.append(Decimal(data_rows).quantize(Decimal("0")))
+                for column in section.columns:
+                    column_style = (
+                        column.paragraph_style
+                        if column.paragraph_style
+                        else self.styleN
+                    )
+                    if column.justify == "CENTER":
+                        column_style = self.style_center_n
+                    elif column.justify == "RIGHT" or column.currency:
+                        column_style = self.style_right_n
+
+                    if isinstance(row, dict):
+                        value = row[column.name]
                     else:
-                        if not scalar_label_written and self.scalar_heading_column == (
-                            column_number + 1
-                        ):
-                            column_style = (
-                                column.paragraph_style
-                                if column.paragraph_style
-                                else self.styleN
+                        value = row.__dict__[column.name]
+
+                    if value:
+                        if column.datatype.lower() in ["int", "integer"]:
+                            scalar_rounding = "0"
+                            value = Decimal(value).quantize(
+                                Decimal(scalar_rounding), rounding=ROUND_HALF_UP
                             )
-                            rr.append(
-                                Paragraph(
-                                    f"{scalar} {section.header}", style=column_style
+                            if column.include_commas:
+                                value = FORMAT_INT.format(value)
+                        elif column.datatype.lower() == "date":
+                            if not isinstance(value, datetime.date):
+                                value = parse(value).date()
+                            value = value.strftime("%m/%d/%Y")
+                        elif column.datatype.lower() == "datetime":
+                            if not isinstance(value, datetime.datetime):
+                                value = parse(value)
+                            value = value.strftime("%m/%d/%Y %I:%M%p")
+                        elif column.decimal_positions:
+                            scalar_rounding = "0.0000000000"[
+                                : column.decimal_positions + 2
+                            ]
+                            value = Decimal(value).quantize(
+                                Decimal(scalar_rounding), rounding=ROUND_HALF_UP
+                            )
+                            if column.include_commas:
+                                fmt = "{0:,.%sf}" % column.decimal_positions
+                                value = fmt.format(value)
+                        column_style.fontSize = column.font_size
+                        display_value = value
+                        if column.currency:
+                            display_value = f"${value}"
+                        rr.append(Paragraph(str(display_value), style=column_style))
+                    else:
+                        rr.append("")
+                    string_value = str(value)
+                    x = max(len(x) for x in string_value.split("<br />"))
+                    # column.set_width(
+                    #     len(str(max(len(x) for x in string_value.split("<br />"))))
+                    # )
+                    column.set_width(max(len(x) for x in string_value.split("<br />")))
+                    for scalar in scalars:
+                        if column.scalar == scalar:
+                            if column.name not in scalars[scalar]:
+                                scalars[scalar][column.name] = 0
+                            if value:
+                                scalar_rounding = "0.00"
+                                if column.datatype.lower() in ["int", "integer"]:
+                                    scalar_rounding = "0"
+                                if isinstance(value, str):
+                                    value = value.replace(",", "")
+                                if column.decimal_positions:
+                                    scalar_rounding = "0.0000000000"[
+                                        : column.decimal_positions + 2
+                                    ]
+                                scalars[scalar][column.name] += Decimal(value).quantize(
+                                    Decimal(scalar_rounding),
+                                    rounding=ROUND_HALF_UP,
                                 )
-                            )
-                            scalar_label_written = True
-                        else:
-                            rr.append("")
+
                 report_data.append(rr)
 
-        if len(self.row_heights) > 0:
-            data_table = Table(
-                report_data,
-                colWidths=self.get_column_widths(section.columns),
-                repeatRows=1,
-                rowHeights=self.row_heights,
-            )
-        else:
-            data_table = Table(
-                report_data,
-                colWidths=self.get_column_widths(section.columns),
-                repeatRows=1,
-            )
+            data_rows = len(report_data)
+            for scalar in sorted(scalars):
+                scalar_label_written = False
+                if len(scalars[scalar]) > 0:
+                    #  add summary row:
+                    rr = []
+                    for column_number, column in enumerate(section.columns):
+                        if column.name in scalars[scalar]:
+                            if scalar == "TOTAL":
+                                if column.include_commas:
+                                    if column.datatype.lower() in ["int", "integer"]:
+                                        scalars[scalar][
+                                            column.name
+                                        ] = FORMAT_INT.format(
+                                            scalars[scalar][column.name]
+                                        )
+                                    elif column.decimal_positions:
+                                        fmt = "{0:,.%sf}" % column.decimal_positions
+                                        scalars[scalar][column.name] = fmt.format(
+                                            scalars[scalar][column.name]
+                                        )
+                                rr.append(scalars[scalar][column.name])
+                            elif scalar == "AVG":
+                                rr.append(
+                                    Decimal(
+                                        scalars[scalar][column.name] / data_rows
+                                    ).quantize(Decimal("0.00"))
+                                )
+                            elif scalar == "COUNT":
+                                rr.append(Decimal(data_rows).quantize(Decimal("0")))
+                        else:
+                            if (
+                                not scalar_label_written
+                                and self.scalar_heading_column == (column_number + 1)
+                            ):
+                                column_style = (
+                                    column.paragraph_style
+                                    if column.paragraph_style
+                                    else self.styleN
+                                )
+                                rr.append(
+                                    Paragraph(
+                                        f"{scalar} {section.header}", style=column_style
+                                    )
+                                )
+                                scalar_label_written = True
+                            else:
+                                rr.append("")
+                    report_data.append(rr)
 
-        data_table.setStyle(
-            TableStyle(
-                section.tablestyle if section.tablestyle else self.DEFAULT_TABLE_STYLE
+            if len(self.row_heights) > 0:
+                data_table = Table(
+                    report_data,
+                    colWidths=self.get_column_widths(section.columns),
+                    repeatRows=1,
+                    rowHeights=self.row_heights,
+                )
+            else:
+                data_table = Table(
+                    report_data,
+                    colWidths=self.get_column_widths(section.columns),
+                    repeatRows=1,
+                )
+
+            data_table.setStyle(
+                TableStyle(
+                    section.tablestyle
+                    if section.tablestyle
+                    else self.DEFAULT_TABLE_STYLE
+                )
             )
-        )
-        self.report_story.append(data_table)
+            self.report_story.append(data_table)
 
         if section.footer and section.footer != "":
             self.report_story.append(Spacer(1, 0.1 * inch))
