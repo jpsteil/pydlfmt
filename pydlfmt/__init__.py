@@ -476,6 +476,8 @@ class PDFReport:
         self.username = username
         self.sections = sections
         self.include_column_headers = include_column_headers
+        self.inch = inch
+        self.Paragraph = Paragraph
 
         #  Report Setup
         reportlab.rl_config.warnOnMissingFontGlyphs = 0
